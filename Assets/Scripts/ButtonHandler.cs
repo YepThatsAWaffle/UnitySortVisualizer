@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ButtonHandler : MonoBehaviour
 {
-    public GameObject prefab;
+    public GameObject Prefab;
 
     private ObjectListController controller;
 
@@ -13,7 +13,7 @@ public class ButtonHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controller = new ObjectListController(prefab);
+        controller = ScriptableObject.CreateInstance<ObjectListController>();
     }
 
     // Update is called once per frame
@@ -24,10 +24,16 @@ public class ButtonHandler : MonoBehaviour
 
     public void OnSetup()
     {
-        controller.CreateUnsortedList(prefab);
+        controller.CreateUnsortedList(Prefab);
     }
 
-    public void OnRepaint(Material mat)
+    public void UpdateNumBars(float value)
+    {
+        controller.UpdateNumBars((int)value);
+        OnSetup();
+    }
+
+    public void OnRepaint()
     {
         controller.RepaintAll();
     }
@@ -35,5 +41,10 @@ public class ButtonHandler : MonoBehaviour
     public void OnDestroyObjects()
     {
         controller.DestroyObjects();
+    }
+
+    public void OnSwapClick()
+    {
+        controller.SwapRandom();
     }
 }

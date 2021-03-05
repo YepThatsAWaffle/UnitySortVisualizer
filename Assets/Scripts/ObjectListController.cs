@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class ObjectListController : MonoBehaviour
+public class ObjectListController : ScriptableObject
 {
     public List<GameObject> gameObjects { get; private set; }
-    public GameObject Prefab;
 
-    public const int numBars = 250;
     public const float ypos = -4.3f;
     public const float worldXMin = -8.9f;
     public const float worldXMax = 8.9f;
@@ -15,28 +15,45 @@ public class ObjectListController : MonoBehaviour
     public const float worldYMin = -5f;
     public const float worldYMax = 5f;
     public const float worldHeight = worldYMax - worldYMin;
-    public const float barMaxHeight = worldHeight + worldYMin - ypos;
-    public const float barWidth = worldWidth / numBars;
-    public const float barHeightIncrement = barMaxHeight / numBars;
+    public float barMaxHeight = worldHeight + worldYMin - ypos;
+    int NumBars;
+    float barWidth;
+    float barHeightIncrement;
 
     private System.Random rand;
 
-    public ObjectListController(GameObject prefab)
+    public ObjectListController()
     {
-        GameObject Prefab = prefab;
         rand = new System.Random();
         gameObjects = new List<GameObject>();
+        UpdateNumBars(250);
+    }
+
+    public void UpdateNumBars(int numBars)
+    {
+        NumBars = numBars;
+        barWidth = worldWidth / NumBars;
+        barHeightIncrement = barMaxHeight / NumBars;
+}
+
+    public void ClearGameObjects()
+    {
+        if (gameObjects.Any())
+        {
+            DestroyObjects();
+        }
     }
 
     public void CreateUnsortedList(GameObject prefab)
     {
+        ClearGameObjects();
         var distinctBarHeights = new List<int>();
-        for (int i = 0; i < numBars; i++)
+        for (int i = 0; i < NumBars; i++)
         {
             distinctBarHeights.Add(i);
         }
 
-        for (int i = 0; i < numBars; i++)
+        for (int i = 0; i < NumBars; i++)
         {
             var randBarHeightIndex = rand.Next(distinctBarHeights.Count);
             var randDistinctBarHeight = distinctBarHeights[randBarHeightIndex] + 1;
@@ -74,5 +91,28 @@ public class ObjectListController : MonoBehaviour
         }
 
         gameObjects.Clear();
+    }
+
+
+    public void SwapRandom()
+    {
+        if(!gameObjects.Any())
+        {
+            return;
+        }
+
+        int aIdx = rand.Next(NumBars);
+        int bIdx = rand.Next(NumBars);
+        var a = gameObjects[aIdx];
+        var b = gameObjects[bIdx];
+        gameObjects[aIdx] = b;
+        gameObjects[bIdx] = a;
+
+        Repaint(a, Color.red);
+        Repaint(b, Color.red);
+
+        var tempX = a.transform.localPosition.x;
+        a.transform.localPosition = new Vector3(b.transform.localPosition.x, a.transform.localPosition.y, a.transform.localPosition.z);
+        b.transform.localPosition = new Vector3(tempX, a.transform.localPosition.y, a.transform.localPosition.z);
     }
 }
