@@ -8,14 +8,12 @@ public class InsertSortAlgorithm : SortAlgorithm
     {
         for (int i = 1; i < stats.size; i++)
         {
-            Debug.Log($"SwapStep {i}");
             yield return StartCoroutine(SortStep(i));
         }
     }
 
     public IEnumerator SortStep(int step)
     {
-        //Debug.Log($"InsideSwapStep {step}");
         int j = step - 1;
         while (j >= 0 && Compare(j+1, j))
         {
