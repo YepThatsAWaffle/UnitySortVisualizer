@@ -14,12 +14,20 @@ public class ButtonHandler : MonoBehaviour
     void Start()
     {
         controller = ScriptableObject.CreateInstance<ObjectListController>();
+        OnSetup();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void OnSort()
+    {
+        var sortHandler = gameObject.AddComponent<SortHandler>();
+        StartCoroutine(sortHandler.DoSort(controller));
+        //Destroy(sortHandler);
     }
 
     public void OnSetup()
@@ -31,16 +39,6 @@ public class ButtonHandler : MonoBehaviour
     {
         controller.UpdateNumBars((int)value);
         OnSetup();
-    }
-
-    public void OnRepaint()
-    {
-        controller.RepaintAll();
-    }
-
-    public void OnDestroyObjects()
-    {
-        controller.DestroyObjects();
     }
 
     public void OnSwapClick()
