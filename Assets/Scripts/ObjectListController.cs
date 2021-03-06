@@ -8,7 +8,7 @@ public class ObjectListController : ScriptableObject
 {
     public List<GameObject> gameObjects { get; private set; }
     public Dictionary<int, GameObject> objectMap;
-    private GameObject SelectedObject;
+    private GameObject[] SelectedObjects;
 
     public const float ypos = -4.3f;
     public const float worldXMin = -8.9f;
@@ -26,6 +26,7 @@ public class ObjectListController : ScriptableObject
 
     public ObjectListController()
     {
+        SelectedObjects = new GameObject[3];
         rand = new System.Random();
         gameObjects = new List<GameObject>();
         objectMap = new Dictionary<int, GameObject>();
@@ -91,6 +92,11 @@ public class ObjectListController : ScriptableObject
 
     public void DestroyObjects()
     {
+        for(int i = 0; i < SelectedObjects.Length; i++)
+        {
+            DeselectObject(i);
+        }
+
         foreach (var go in gameObjects)
         {
             Destroy(go);
@@ -98,29 +104,6 @@ public class ObjectListController : ScriptableObject
 
         gameObjects.Clear();
         objectMap.Clear();
-    }
-
-
-    public void SwapRandom()
-    {
-        if(!gameObjects.Any())
-        {
-            return;
-        }
-
-        int aIdx = rand.Next(NumBars);
-        int bIdx = rand.Next(NumBars);
-        var a = gameObjects[aIdx];
-        var b = gameObjects[bIdx];
-        gameObjects[aIdx] = b;
-        gameObjects[bIdx] = a;
-
-        PaintObject(a, Color.red);
-        PaintObject(b, Color.red);
-
-        var tempX = a.transform.localPosition.x;
-        a.transform.localPosition = new Vector3(b.transform.localPosition.x, a.transform.localPosition.y, a.transform.localPosition.z);
-        b.transform.localPosition = new Vector3(tempX, a.transform.localPosition.y, a.transform.localPosition.z);
     }
 
     public void Swap(int aIdx, int bIdx)
@@ -142,16 +125,37 @@ public class ObjectListController : ScriptableObject
 
     public void SelectObject(int index)
     {
-        SelectedObject = GetObjectOfIndex(index);
-        PaintObject(GetObjectOfIndex(index), Color.red);
+        DeselectObject(1);
+        SelectedObjects[1] = GetObjectOfIndex(index);
+        PaintObject(SelectedObjects[1], Color.red);
     }
 
-    public void DeselectObject()
+    public void SelectPivotObject(int index)
     {
-        if (SelectedObject != null)
+        DeselectObject(0);
+        SelectedObjects[0] = GetObjectOfIndex(index);
+        PaintObject(SelectedObjects[0], Color.cyan);
+    }
+
+    public void SelectCompareObject(int index)
+    {
+        DeselectObject(2);
+        SelectedObjects[2] = GetObjectOfIndex(index);
+        PaintObject(SelectedObjects[2], Color.green);
+    }
+
+    public void DeselectObject(int type)
+    {
+        if (ObjectSelected(type))
         {
-            PaintObject(SelectedObject, Color.white);
+            PaintObject(SelectedObjects[type], Color.white);
+            SelectedObjects[type] = null;
         }
+    }
+
+    private bool ObjectSelected(int type)
+    {
+        return SelectedObjects[type] != null;
     }
 
     public float GetValueofObjectAtIndex(int index)

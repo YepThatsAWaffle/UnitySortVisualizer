@@ -5,5 +5,5 @@ using UnityEngine;
 public interface ISortAlgorithm
 {
     IEnumerator DoSort();
-    void Setup(ObjectListController _controller);
+    void Setup(ObjectListController _controller, float _delay, SortStats _stats);
 }

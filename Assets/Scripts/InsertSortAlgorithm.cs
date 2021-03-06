@@ -6,7 +6,7 @@ public class InsertSortAlgorithm : SortAlgorithm
 {
     public override IEnumerator DoSort()
     {
-        for (int i = 1; i < stats.size; i++)
+        for (int i = 1; i < GetSize(); i++)
         {
             yield return StartCoroutine(SortStep(i));
         }
@@ -20,8 +20,7 @@ public class InsertSortAlgorithm : SortAlgorithm
             Select(j+1);
             Swap(j, j + 1);
             j--;
-            yield return new WaitForSeconds(.001f);
-            Deselect();
+            yield return new WaitForSeconds(delay);
         }
     }
 }

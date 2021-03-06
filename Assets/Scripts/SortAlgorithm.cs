@@ -5,40 +5,42 @@ using UnityEngine;
 public abstract class SortAlgorithm : MonoBehaviour, ISortAlgorithm
 {
     private ObjectListController controller;
-    public SortStats stats;
+    public float delay;
+    SortStats stats;
 
     private void Start()
     {
     }
 
-    public void Setup(ObjectListController _controller)
+    public void Setup(ObjectListController _controller, float _delay, SortStats _stats)
     {
+        delay = _delay;
         controller = _controller;
-        stats = new SortStats();
-        stats.size = controller.GetSize();
+        stats = _stats;
+        stats.Size = controller.GetSize();
     }
 
     public float GetValue(int index) 
     {
-        stats.arrayAccesses++;
+        stats.Accesses++;
         return controller.GetValueofObjectAtIndex(index);
     }
 
     public bool Compare(int a, int b)
     {
-        stats.compares++;
+        stats.Compares++;
         return CompareValue(GetValue(a), GetValue(b));
     }
 
     public bool Compare(float a, int b)
     {
-        stats.compares++;
+        stats.Compares++;
         return CompareValue(a, GetValue(b));
     }
 
     public bool Compare(int a, float b)
     {
-        stats.compares++;
+        stats.Compares++;
         return CompareValue(GetValue(a), b);
     }
 
@@ -49,8 +51,7 @@ public abstract class SortAlgorithm : MonoBehaviour, ISortAlgorithm
 
     public void Swap(int a, int b)
     {
-        Debug.Log($"Swapping {a} with {b}");
-        stats.swaps++;
+        stats.Swaps++;
         controller.Swap(a, b);
     }
 
@@ -59,9 +60,24 @@ public abstract class SortAlgorithm : MonoBehaviour, ISortAlgorithm
         controller.SelectObject(index);
     }
 
-    public void Deselect()
+    public void SelectPivot(int index)
     {
-        controller.DeselectObject();
+        controller.SelectPivotObject(index);
+    }
+
+    public void SelectCompare(int index)
+    {
+        controller.SelectCompareObject(index);
+    }
+
+    public void UpdateDelay(float _delay)
+    {
+        delay = _delay;
+    }
+
+    public int GetSize()
+    {
+        return stats.Size;
     }
 
     public abstract IEnumerator DoSort();
