@@ -10,14 +10,14 @@ public class ObjectListController : ScriptableObject
     public Dictionary<int, GameObject> objectMap;
     private GameObject[] SelectedObjects;
 
-    public const float ypos = -4.3f;
-    public const float worldXMin = -8.9f;
-    public const float worldXMax = 8.9f;
-    public const float worldWidth = worldXMax - worldXMin;
-    public const float worldYMin = -5f;
-    public const float worldYMax = 5f;
-    public const float worldHeight = worldYMax - worldYMin;
-    public float barMaxHeight = worldHeight + worldYMin - ypos;
+    public float ypos;
+    public float worldXMin;
+    public float worldXMax;
+    public float worldWidth;
+    public float worldYMin;
+    public float worldYMax;
+    public float worldHeight;
+    public float barMaxHeight;
     int NumBars;
     float barWidth;
     float barHeightIncrement;
@@ -31,6 +31,20 @@ public class ObjectListController : ScriptableObject
         gameObjects = new List<GameObject>();
         objectMap = new Dictionary<int, GameObject>();
         UpdateNumBars(250);
+    }
+
+    public void OnEnable()
+    {
+        var lowerLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
+        var upperRight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+        worldXMin = lowerLeft.x;
+        worldXMax = upperRight.x;
+        worldWidth = Mathf.Abs(worldXMax) + Mathf.Abs(worldXMin);
+        worldYMin = lowerLeft.y;
+        ypos = worldYMin + 1f;
+        worldYMax = upperRight.y;
+        worldHeight = Mathf.Abs(worldYMax);
+        barMaxHeight = (worldHeight - ypos);
     }
 
     public void UpdateNumBars(int numBars)

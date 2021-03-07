@@ -8,7 +8,8 @@ public class SortAlgorithmFactory : MonoBehaviour
     {
         Insertion = 0,
         Quick = 1,
-        Selection = 2
+        Selection = 2,
+        Bubble = 3,
     }
     public SortAlgorithm GetSortAlgorithm(int type)
     {
@@ -16,6 +17,9 @@ public class SortAlgorithmFactory : MonoBehaviour
         SortType sortType = (SortType)type;
         switch (sortType)
         {
+            case SortType.Bubble:
+                sortAlgorithm = gameObject.AddComponent<BubbleSortAlgorithm>();
+                break;
             case SortType.Insertion:
                 sortAlgorithm = gameObject.AddComponent<InsertSortAlgorithm>();
                 break;

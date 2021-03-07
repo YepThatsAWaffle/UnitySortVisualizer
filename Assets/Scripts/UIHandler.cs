@@ -22,8 +22,6 @@ public class UIHandler : MonoBehaviour
 
     float delay = .001f;
 
-    
-
     // Start is called before the first frame update
     void Start()
     {
