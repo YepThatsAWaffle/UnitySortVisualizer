@@ -20,7 +20,7 @@ public class SortStats
     set
         {
             size = value;
-            sizeText.text = size.ToString();
+            sizeText.text = size.ToString("N0");
         }
     }
     public int Compares
