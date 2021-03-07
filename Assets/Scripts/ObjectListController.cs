@@ -9,7 +9,6 @@ public class ObjectListController : ScriptableObject
     public List<GameObject> gameObjects { get; private set; }
     public Dictionary<int, GameObject> objectMap;
     private GameObject[] SelectedObjects;
-
     public float ypos;
     public float worldXMin;
     public float worldXMax;
@@ -33,7 +32,20 @@ public class ObjectListController : ScriptableObject
         UpdateNumBars(250);
     }
 
-    public void OnEnable()
+    public void UpdateNumBars(int numBars)
+    {
+        NumBars = numBars;
+    }
+
+    public void ClearGameObjects()
+    {
+        if (gameObjects.Any())
+        {
+            DestroyObjects();
+        }
+    }
+
+    private void GetBounds()
     {
         var lowerLeft = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
         var upperRight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
@@ -45,27 +57,16 @@ public class ObjectListController : ScriptableObject
         worldYMax = upperRight.y;
         worldHeight = Mathf.Abs(worldYMax);
         barMaxHeight = (worldHeight - ypos);
-    }
-
-    public void UpdateNumBars(int numBars)
-    {
-        NumBars = numBars;
-        barWidth = worldWidth / NumBars;
         barHeightIncrement = barMaxHeight / NumBars;
+        barWidth = worldWidth / NumBars;
     }
 
-    public void ClearGameObjects()
+    public void CreateUnsortedList(GameObject prefab, int listState, int direction)
     {
-        if (gameObjects.Any())
-        {
-            DestroyObjects();
-        }
-    }
-
-    public void CreateUnsortedList(GameObject prefab)
-    {
+        GetBounds();
         ClearGameObjects();
-        var distinctList = new DistinctRandomList(NumBars, rand);
+
+        var distinctList = new DistinctRandomList(NumBars, rand, listState, direction);
 
         for (int i = 0; i < NumBars; i++)
         {

@@ -18,9 +18,10 @@ public class UIHandler : MonoBehaviour
 
     private ObjectListController controller;
 
-    private int sortType;
-
+    int sortType = 0;
     float delay = .001f;
+    int direction = 0;
+    int listState = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -40,14 +41,14 @@ public class UIHandler : MonoBehaviour
 
     public void OnSort()
     {
-        StartCoroutine(sortHandler.DoSort(controller, sortType, delay, stats));
+        StartCoroutine(sortHandler.DoSort(controller, sortType, delay, stats, direction));
     }
 
     public void OnSetup()
     {
-        stats.Init();
         sortHandler.AbortSort();
-        controller.CreateUnsortedList(Prefab);
+        stats.Init();
+        controller.CreateUnsortedList(Prefab, listState, direction);
     }
 
     public void UpdateNumBars(float value)
@@ -60,9 +61,7 @@ public class UIHandler : MonoBehaviour
 
     public void OnSortTypeChange(int val)
     {
-        sortHandler.AbortSort();
         sortType = val;
-        OnSetup();
     }
 
     public void OnDelayUpdate(float val)
@@ -70,5 +69,16 @@ public class UIHandler : MonoBehaviour
         delay = val/1000f;
         stats.Delay = val;
         sortHandler.UpdateDelay(delay);
+    }
+
+    public void OnDirectionChange(int val)
+    {
+        direction = val;
+    }
+
+    public void OnListStateChange(int val)
+    {
+        listState = val;
+        OnSetup();
     }
 }

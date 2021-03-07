@@ -4,20 +4,27 @@ using UnityEngine;
 
 public abstract class SortAlgorithm : MonoBehaviour, ISortAlgorithm
 {
+    public enum SortDirection
+    {
+        ascending,
+        descending
+    }
     private ObjectListController controller;
     public float delay;
     SortStats stats;
+    SortDirection direction;
 
     private void Start()
     {
     }
 
-    public void Setup(ObjectListController _controller, float _delay, SortStats _stats)
+    public void Setup(ObjectListController _controller, float _delay, SortStats _stats, int _direction)
     {
         delay = _delay;
         controller = _controller;
         stats = _stats;
         stats.Size = controller.GetSize();
+        direction = (SortDirection)_direction;
     }
 
     public float GetValue(int index) 
@@ -46,7 +53,14 @@ public abstract class SortAlgorithm : MonoBehaviour, ISortAlgorithm
 
     public bool CompareValue(float floatA, float floatB)
     {
-        return floatA < floatB;
+        if (direction == SortDirection.ascending)
+        { 
+            return floatA < floatB;
+        }
+        else
+        {
+            return floatB < floatA;
+        }
     }
 
     public void Swap(int a, int b)

@@ -20,10 +20,15 @@ public class SortHandler : MonoBehaviour
         sortFactory = gameObject.AddComponent<SortAlgorithmFactory>();
     }
 
-    public IEnumerator DoSort(ObjectListController _controller, int type, float delay, SortStats stats)
+    public IEnumerator DoSort(ObjectListController _controller, int type, float delay, SortStats stats, int direction)
     {
+        if(state == SortState.Sorting)
+        {
+            yield break;
+        }
+
         sortAlgorithm = sortFactory.GetSortAlgorithm(type);
-        sortAlgorithm.Setup(_controller, delay, stats);
+        sortAlgorithm.Setup(_controller, delay, stats, direction);
         state = SortState.Sorting;
         yield return StartCoroutine(sortAlgorithm.DoSort());
 

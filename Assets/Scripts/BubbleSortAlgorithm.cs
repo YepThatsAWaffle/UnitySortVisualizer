@@ -6,7 +6,7 @@ public class BubbleSortAlgorithm : SortAlgorithm
 {
     public override IEnumerator DoSort()
     {
-        for (int i = 1; i < GetSize(); i++)
+        for (int i = 0; i < GetSize(); i++)
         {
             yield return StartCoroutine(SortStep(i));
         }
@@ -14,7 +14,7 @@ public class BubbleSortAlgorithm : SortAlgorithm
 
     public IEnumerator SortStep(int i)
     {
-        for(int j = 0; j < GetSize() -i - 1; j++)
+        for(int j = 0; j < GetSize() - i - 1; j++)
         {
             Select(j);
             SelectCompare(j + 1);
