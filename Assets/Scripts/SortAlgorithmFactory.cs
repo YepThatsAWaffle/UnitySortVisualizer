@@ -7,9 +7,10 @@ public class SortAlgorithmFactory : MonoBehaviour
     public enum SortType
     {
         Insertion = 0,
-        Quick = 1,
-        Selection = 2,
-        Bubble = 3,
+        Selection = 1,
+        Bubble = 2,
+        Quick = 3,
+        Merge = 4,
     }
     public SortAlgorithm GetSortAlgorithm(int type)
     {
@@ -28,6 +29,9 @@ public class SortAlgorithmFactory : MonoBehaviour
                 break;
             case SortType.Selection:
                 sortAlgorithm = gameObject.AddComponent<SelectionSortAlgorithm>();
+                break;
+            case SortType.Merge:
+                sortAlgorithm = gameObject.AddComponent<MergeSortAlgorithm>();
                 break;
             default:
                 break;

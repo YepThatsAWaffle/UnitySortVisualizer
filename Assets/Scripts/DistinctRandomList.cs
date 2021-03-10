@@ -56,10 +56,10 @@ public class DistinctRandomList
                 GenerateRandomList(from, to, 100);
                 break;
             case ListState.MostlyUnsorted:
-                GenerateRandomList(from, to, 66);
+                GenerateRandomList(from, to, 80);
                 break;
             case ListState.MostlySorted:
-                GenerateRandomList(from, to, 33);
+                GenerateRandomList(from, to, 55);
                 break;
             case ListState.Sorted:
                 GenerateRandomList(from, to, 0);

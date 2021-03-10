@@ -51,6 +51,12 @@ public abstract class SortAlgorithm : MonoBehaviour, ISortAlgorithm
         return CompareValue(GetValue(a), b);
     }
 
+    public bool Compare(float a, float b)
+    {
+        stats.Compares++;
+        return CompareValue(a, b);
+    }
+
     public bool CompareValue(float floatA, float floatB)
     {
         if (direction == SortDirection.ascending)
@@ -92,6 +98,12 @@ public abstract class SortAlgorithm : MonoBehaviour, ISortAlgorithm
     public int GetSize()
     {
         return stats.Size;
+    }
+
+    public void SetValue(int idx, float val)
+    {
+        stats.Accesses++;
+        controller.SetValueOfObjectAtIndex(idx, val);
     }
 
     public abstract IEnumerator DoSort();
