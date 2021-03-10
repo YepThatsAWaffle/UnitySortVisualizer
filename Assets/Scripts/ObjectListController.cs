@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class ObjectListController : ScriptableObject
 {
     public List<GameObject> gameObjects { get; private set; }
-    public Dictionary<int, GameObject> objectMap;
     private GameObject[] SelectedObjects;
     public float ypos;
     public float worldXMin;
@@ -28,7 +27,6 @@ public class ObjectListController : ScriptableObject
         SelectedObjects = new GameObject[3];
         rand = new System.Random();
         gameObjects = new List<GameObject>();
-        objectMap = new Dictionary<int, GameObject>();
         UpdateNumBars(250);
     }
 
@@ -70,13 +68,18 @@ public class ObjectListController : ScriptableObject
 
         for (int i = 0; i < NumBars; i++)
         {
-            var barXPos = worldXMin + (i * barWidth) + barWidth / 2;
-
-            var go = Instantiate(prefab, new Vector2(barXPos, ypos), Quaternion.identity);
-            go.transform.localScale = new Vector3(barWidth, barHeightIncrement * distinctList[i], 1);
+            var go = CreateGameObject(prefab, i, distinctList[i]);
             gameObjects.Add(go);
-            objectMap.Add(go.GetInstanceID(), go);
         }
+    }
+
+    private GameObject CreateGameObject(GameObject prefab, int xIdx, int yScale)
+    {
+        var barXPos = worldXMin + (xIdx * barWidth) + barWidth / 2;
+
+        var go = Instantiate(prefab, new Vector2(barXPos, ypos), Quaternion.identity);
+        go.transform.localScale = new Vector3(barWidth, barHeightIncrement * yScale, 1);
+        return go;
     }
 
     public void RepaintAll()
@@ -87,10 +90,6 @@ public class ObjectListController : ScriptableObject
         }
     }
 
-    public void PaintObjectAtId(int Id, Color color)
-    {
-        PaintObject(GetObjectOfId(Id), color);
-    }
     public void PaintObjectAtIndex(int Index, Color color)
     {
         PaintObject(GetObjectOfIndex(Index), color);
@@ -118,7 +117,6 @@ public class ObjectListController : ScriptableObject
         }
 
         gameObjects.Clear();
-        objectMap.Clear();
     }
 
     public void Swap(int aIdx, int bIdx)
@@ -128,11 +126,17 @@ public class ObjectListController : ScriptableObject
             return;
         }
 
-        var a = gameObjects[aIdx];
-        var b = gameObjects[bIdx];
+        var a = GetObjectOfIndex(aIdx);
+        var b = GetObjectOfIndex(bIdx);
+
+        SwapBars(a, b);
+
         gameObjects[aIdx] = b;
         gameObjects[bIdx] = a;
+    }
 
+    private void SwapBars(GameObject a, GameObject b)
+    {
         var tempX = a.transform.localPosition.x;
         a.transform.localPosition = new Vector3(b.transform.localPosition.x, a.transform.localPosition.y, a.transform.localPosition.z);
         b.transform.localPosition = new Vector3(tempX, a.transform.localPosition.y, a.transform.localPosition.z);
@@ -177,15 +181,6 @@ public class ObjectListController : ScriptableObject
     {
         return GetValueOfObject(GetObjectOfIndex(index));
     }
-    public float GetValueofObjectOfId(int id)
-    {
-        return GetValueOfObject(GetObjectOfId(id));
-    }
-
-    public GameObject GetObjectOfId(int id)
-    {
-        return objectMap[id];
-    }
 
     public GameObject GetObjectOfIndex(int index)
     {
@@ -197,9 +192,14 @@ public class ObjectListController : ScriptableObject
         return go.transform.localScale.y;
     }
 
+    public void SetValueOfObjectAtIndex(int idx, float value)
+    {
+        SetObjectToValue(value ,gameObjects[idx]);
+    }
+
     public void SetObjectToValue(float value, GameObject go)
     {
-        go.transform.localPosition = new Vector3(value, go.transform.localPosition.y, go.transform.localPosition.z);
+        go.transform.localScale = new Vector3(go.transform.localScale.x, value, go.transform.localScale.z);
     }
 
     public int GetSize()

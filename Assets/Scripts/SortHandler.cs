@@ -27,6 +27,7 @@ public class SortHandler : MonoBehaviour
             yield break;
         }
 
+        stats.Init();
         sortAlgorithm = sortFactory.GetSortAlgorithm(type);
         sortAlgorithm.Setup(_controller, delay, stats, direction);
         state = SortState.Sorting;
