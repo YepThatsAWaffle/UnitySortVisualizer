@@ -27,7 +27,7 @@ public class ObjectListController : ScriptableObject
         SelectedObjects = new GameObject[3];
         rand = new System.Random();
         gameObjects = new List<GameObject>();
-        UpdateNumBars(250);
+        UpdateNumBars(256);
     }
 
     public void UpdateNumBars(int numBars)
@@ -106,10 +106,7 @@ public class ObjectListController : ScriptableObject
 
     public void DestroyObjects()
     {
-        for(int i = 0; i < SelectedObjects.Length; i++)
-        {
-            DeselectObject(i);
-        }
+        DeselectAll();
 
         foreach (var go in gameObjects)
         {
@@ -169,6 +166,14 @@ public class ObjectListController : ScriptableObject
         {
             PaintObject(SelectedObjects[type], Color.white);
             SelectedObjects[type] = null;
+        }
+    }
+
+    public void DeselectAll()
+    {
+        for (int i = 0; i < SelectedObjects.Length; i++)
+        {
+            DeselectObject(i);
         }
     }
 

@@ -32,6 +32,7 @@ public class SortHandler : MonoBehaviour
         sortAlgorithm.Setup(_controller, delay, stats, direction);
         state = SortState.Sorting;
         yield return StartCoroutine(sortAlgorithm.DoSort());
+        sortAlgorithm.DeselectAll();
 
         if (state == SortState.Sorting)
         { 

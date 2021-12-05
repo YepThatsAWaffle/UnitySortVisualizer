@@ -11,6 +11,9 @@ public class SortAlgorithmFactory : MonoBehaviour
         Bubble = 2,
         Quick = 3,
         Merge = 4,
+        Tim = 5,
+        Heap = 6,
+        Intro = 7
     }
     public SortAlgorithm GetSortAlgorithm(int type)
     {
@@ -32,6 +35,15 @@ public class SortAlgorithmFactory : MonoBehaviour
                 break;
             case SortType.Merge:
                 sortAlgorithm = gameObject.AddComponent<MergeSortAlgorithm>();
+                break;
+            case SortType.Tim:
+                sortAlgorithm = gameObject.AddComponent<TimSortAlgorithm>();
+                break;
+            case SortType.Heap:
+                sortAlgorithm = gameObject.AddComponent<HeapSortAlgorithm>();
+                break;
+            case SortType.Intro:
+                sortAlgorithm = gameObject.AddComponent<IntroSortAlgorithm>();
                 break;
             default:
                 break;
